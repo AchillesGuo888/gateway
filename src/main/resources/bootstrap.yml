@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: gateway
+  servlet:
+    multipart:
+      maxFileSize:  1024000000
+      maxRequestSize: 1024000000
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    status-page-url-path: /actuator/info
+    health-check-url-path: /actuator/health
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://admin:admin123@127.0.0.1:8761/eureka/
+

@@ -1,0 +1,41 @@
+server:
+  port: 18081
+spring:
+  cloud:  # spring cloud gateway
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true
+      routes:
+        # Hotel main part
+        - id: Hotux
+          uri: lb://Hotux
+          predicates:
+            - Path=/hotel/**,/order/**,/room/**,/roomType/**,/roomTypePrice/**,/user/**
+          filters:
+            - SwaggerHeaderFilter
+            # setting demotion
+            - name: Hystrix
+              args:
+                name: fallbackCommon
+                fallbackUri: 'forward:/fallback'
+        # Bill payment part
+        - id: Bill
+          uri: lb://Bill
+          predicates:
+            - Path=/bill/**
+          filters:
+            - SwaggerHeaderFilter
+            # setting demotion
+            - name: Hystrix
+              args:
+                name: fallbackCommon
+                fallbackUri: 'forward:/fallback'
+ignore:
+  urls:
+    - /actuator/
+    - /swagger-resources/
+
+  clients:
+    - /user/withoutToken/
